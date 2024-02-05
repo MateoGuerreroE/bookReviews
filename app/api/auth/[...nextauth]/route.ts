@@ -1,7 +1,7 @@
 import axios from "axios";
-import { log } from "console";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import * as JWT from "jsonwebtoken";
 
 const handler = NextAuth({
     providers: [
@@ -21,7 +21,18 @@ const handler = NextAuth({
                 }
             }
           })
-    ]
+    ],
+    callbacks: {
+        async jwt({user, token}) {
+            return {user, token}
+        },
+        async session({session, token}) {
+            const localToken = (token.token as any).user;
+            const data: any = JWT.verify(localToken, Buffer.from(process.env.NEXTAUTH_JWT as string, 'base64'))
+            session.user = {email: data.email, id: data.id, photo: data.photo, firstName: data.firstName, lastName: data.lastName, token: localToken};
+            return session;
+        }
+    }
 })
 
 export {handler as GET, handler as POST}
