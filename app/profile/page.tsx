@@ -3,18 +3,18 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import nullProfile from "../../public/empty-profile.png";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { validateErrors } from "@/helpers/validations";
 import axios from "axios";
 
 export default function Profile() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const image = session?.user.photo || nullProfile;
   const [info, setInfo] = useState<Partial<User>>({
-    firstName: session?.user.firstName || "",
-    lastName: session?.user.lastName || "",
-    photo: session?.user.photo || "",
-    email: session?.user.email || "",
+    firstName: "",
+    lastName: "",
+    photo: "",
+    email: "",
   });
   const [errors, setErrors] = useState<Partial<User>>({
     firstName: "",
@@ -22,6 +22,15 @@ export default function Profile() {
     photo: "",
     email: "",
   });
+
+  useEffect(() => {
+    setInfo({
+      firstName: session?.user.firstName || "",
+      lastName: session?.user.lastName || "",
+      email: session?.user.email || "",
+      photo: session?.user.photo || "",
+    });
+  }, [session]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInfo({ ...info, [e.target.name]: e.target.value });
@@ -37,6 +46,8 @@ export default function Profile() {
           "https://bookreviewsapp20240204232531.azurewebsites.net/api/User",
           { ...info, id: session?.user.id }
         );
+        console.log(await update(info));
+        console.log(session);
         alert("Cambios guardados");
       } catch (error) {
         alert("No se pudieron guardar los cambios");
