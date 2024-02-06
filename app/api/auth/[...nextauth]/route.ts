@@ -13,7 +13,7 @@ const handler = NextAuth({
             },
             async authorize(credentials) {
                 try {
-                    const {data} = await axios.post(process.env.BASE_URL + "User/login", {email: credentials?.username, password: credentials?.password})
+                    const {data} = await axios.post(process.env.NEXT_BACKEND_URL + "User/login", {email: credentials?.username, password: credentials?.password})
                     if (data) return data
                     else return null
                 } catch (error) {

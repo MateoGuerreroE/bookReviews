@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import SessionAuthProvider from "@/context/SessionAuthProvider";
 import axios from "axios";
+import NavBar from "@/components/NavBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionAuthProvider>{children}</SessionAuthProvider>
+        <SessionAuthProvider>
+          <NavBar />
+          {children}
+        </SessionAuthProvider>
       </body>
     </html>
   );
