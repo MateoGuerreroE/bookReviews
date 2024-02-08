@@ -6,6 +6,7 @@ import nullProfile from "../../public/empty-profile.png";
 import { ChangeEvent, useEffect, useState } from "react";
 import { validateErrors } from "@/helpers/validations";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default function Profile() {
   const { data: session, update } = useSession();
@@ -39,21 +40,40 @@ export default function Profile() {
 
   const handleSubmit = async () => {
     if (errors.firstName || errors.lastName || errors.email || errors.photo) {
-      alert("Hay errores en el formulario.");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Hay errores en el formulario",
+        color: "#FFFFFF",
+        background: "#0C0C0C",
+      });
     } else {
       try {
         await axios.put<boolean>(
           "https://bookreviewsapp20240204232531.azurewebsites.net/api/User",
           { ...info, id: session?.user.id }
         );
-        console.log(await update(info));
-        console.log(session);
-        alert("Cambios guardados");
+        await update(info);
+        Swal.fire({
+          icon: "success",
+          title: "Guardado",
+          text: "Cambios guardados con exito",
+          color: "#FFFFFF",
+          background: "#0C0C0C",
+        });
       } catch (error) {
-        alert("No se pudieron guardar los cambios");
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un problema al guardar la información",
+          color: "#FFFFFF",
+          background: "#0C0C0C",
+        });
       }
     }
   };
+
+  const handlePasswordChange = async () => {};
 
   return (
     <div className="flex flex-col h-[100vh] justify-center">
@@ -117,6 +137,7 @@ export default function Profile() {
               Guardar cambios
             </button>
             <button
+              onClick={handlePasswordChange}
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
