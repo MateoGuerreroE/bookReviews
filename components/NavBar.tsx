@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ButtonLogin from "./ButtonLogin";
+import ButtonLogin from "./books/ButtonLogin";
 import ProfileMiniature from "./ProfileMiniature";
 
 export default function NavBar() {
@@ -28,7 +28,7 @@ export default function NavBar() {
       </div>
       <div className="flex self-center mx-5 gap-10">
         <ProfileMiniature />
-        <ButtonLogin />
+        <ButtonLogin text="Cierra sesión" text2="Inicia sesión" />
       </div>
     </div>
   );
